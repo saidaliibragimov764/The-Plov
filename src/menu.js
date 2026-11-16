@@ -1,4 +1,4 @@
-// Ismail Samani — расмiy menyu (Osh-Sofi restoran).
+// The Plov — rasmiy menyu.
 // Manba: restoran menyu fotosuratlari (2026). Nomlar va tavsiflar rus tilida aynan
 // rasmlardagidek berilgan, o‘zbekcha tarjimasi bilan birga saqlanadi.
 // Diqqat: menyuda narxi ko‘rsatilmagan taomlar ilovaga kiritilmagan.
