@@ -1,4 +1,4 @@
-# Ismail Samani
+# The Plov
 
 React va Vite yordamida tayyorlangan mobil veb-ilova prototipi.
 
