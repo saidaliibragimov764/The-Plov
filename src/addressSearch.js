@@ -1,6 +1,6 @@
 // Explicit-submit search (no autocomplete) follows the public Nominatim usage policy.
-export async function searchAddress(query, {signal, fetchImpl = fetch} = {}) {
-  const params = new URLSearchParams({q: query.trim(), format: 'jsonv2', addressdetails: '1', limit: '5', countrycodes: 'uz', 'accept-language': 'uz'});
+export async function searchAddress(query, {signal, fetchImpl = fetch, language = 'uz'} = {}) {
+  const params = new URLSearchParams({q: query.trim(), format: 'jsonv2', addressdetails: '1', limit: '5', countrycodes: 'uz', 'accept-language': ['uz', 'ru', 'en'].includes(language) ? language : 'uz'});
   const response = await fetchImpl(`https://nominatim.openstreetmap.org/search?${params}`, {signal, headers: {'Accept': 'application/json'}});
   if (!response.ok) throw new Error('Address search failed');
   const data = await response.json();

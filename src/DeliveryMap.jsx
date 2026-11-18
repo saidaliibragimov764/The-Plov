@@ -6,8 +6,7 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {validLocation} from './orderApi';
 import {searchAddress} from './addressSearch';
-
-const L = (lang, uz, ru) => lang === 'uz' ? uz : ru;
+import {translate as L} from './i18n';
 
 export default function DeliveryMap({location, onChange, readOnly = false, lang = 'uz'}) {
   const t = (uz, ru) => L(lang, uz, ru);
@@ -110,7 +109,7 @@ export default function DeliveryMap({location, onChange, readOnly = false, lang 
     searchRequest.current = controller;
     setSearching(true); setSearchError(''); setResults([]);
     try {
-      const places = await searchAddress(value, {signal:controller.signal});
+      const places = await searchAddress(value, {signal:controller.signal, language: lang});
       if (!alive.current || controller.signal.aborted) return;
       setResults(places);
       if (!places.length) setSearchError(t('Manzil topilmadi. Boshqacha yozib ko‘ring yoki xaritadan tanlang.', 'Адрес не найден. Напишите иначе или выберите на карте.'));

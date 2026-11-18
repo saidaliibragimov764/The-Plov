@@ -13,15 +13,24 @@ import extraMeat from './assets/menu/extra-meat.jpg';
 import dumba from './assets/menu/dumba.jpg';
 import pay from './assets/menu/pay.jpg';
 import ilik from './assets/menu/ilik.jpg';
+import {EN} from './i18n';
 
-export const SECTIONS = [
+const addEnglish = value => {
+  if (Array.isArray(value)) return value.map(addEnglish);
+  if (!value || typeof value !== 'object') return value;
+  const translated = Object.fromEntries(Object.entries(value).map(([key, item]) => [key, addEnglish(item)]));
+  if (typeof value.uz === 'string' && typeof value.ru === 'string') translated.en = EN[value.uz] ?? value.uz;
+  return translated;
+};
+
+export const SECTIONS = addEnglish([
   {id: 'main', title: {uz: 'Asosiy taomlar', ru: 'Основные блюда'}, short: {uz: 'Asosiy taomlar', ru: 'Основные'}},
   {id: 'additions', title: {uz: "Asosiy taomlarga qo'shimchalar", ru: 'Добавки к основным блюдам'}, short: {uz: "Qo'shimchalar", ru: 'Добавки'}},
-];
+]);
 
 const v = (uz, ru, price) => ({label: {uz, ru}, price});
 
-export const PRODUCTS = [
+export const PRODUCTS = addEnglish([
   // ——— Основные блюда ———
   {id: 1, num: 1, section: 'main',
    name: {uz: 'Osh-Sofi — Buxoro an’anaviy palovi', ru: 'Osh-Sofi Бухарский традиционный плов'},
@@ -89,6 +98,6 @@ export const PRODUCTS = [
    name: {uz: 'Ilik (suyak iligi)', ru: 'Костный мозг (илик)'},
    portion: {uz: '50 gr', ru: '50 гр'},
    variants: [v('50 gr', '50 гр', 13000)], image: ilik},
-];
+]);
 
 export const minPrice = p => Math.min(...p.variants.map(x => x.price));

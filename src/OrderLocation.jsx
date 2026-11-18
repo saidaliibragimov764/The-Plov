@@ -1,8 +1,7 @@
 import React from 'react';
 import DeliveryMap from './DeliveryMap';
 import {navigationLinks} from './orderApi';
-
-const L = (lang, uz, ru) => lang === 'uz' ? uz : ru;
+import {translate as L} from './i18n';
 
 // Reusable by a future authenticated admin or courier order-details screen.
 export default function OrderLocation({delivery, lang = 'uz'}) {
