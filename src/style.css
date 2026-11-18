@@ -2408,6 +2408,25 @@ p {
   .logo {
     font-size: 21px;
   }
+  .topbar {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .top-actions {
+    gap: 2px;
+  }
+  .top-actions > .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .top-actions > .avatar-mini {
+    width: 28px;
+    height: 28px;
+  }
+  .lang-switch.compact button {
+    padding: 4px 5px;
+    font-size: 9px;
+  }
   .slide-prompt {
     font-size: 9px;
     right: 85px;

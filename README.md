@@ -1,6 +1,6 @@
 # The Plov
 
-React va Vite yordamida tayyorlangan mobil veb-ilova prototipi.
+React va Vite yordamida tayyorlangan mobil veb-ilova prototipi. Interfeys o‘zbek, rus va ingliz tillarida ishlaydi; til tanlovi brauzerda saqlanadi.
 
 ## Ishga tushirish
 
@@ -8,7 +8,7 @@ React va Vite yordamida tayyorlangan mobil veb-ilova prototipi.
 npm install
 npm run dev
 npm run build
-node --test tests/delivery-map.test.mjs
+npm test
 ```
 
 Vercel uchun `dist` build papkasi. Xarita Leaflet va OpenStreetMap asosida, API kaliti talab qilmaydi. Xaritaga bosib yoki belgini surib manzil tanlanadi; joriy joylashuv uchun HTTPS va foydalanuvchi ruxsati talab qilinadi. OpenStreetMap plitkalari internet talab qiladi va ularning [foydalanish siyosati](https://operations.osmfoundation.org/policies/tiles/)ga rioya qilish kerak; katta trafikda mos xarita provayderidan foydalaning.

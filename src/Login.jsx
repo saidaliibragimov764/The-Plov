@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ArrowRight, Check, ChevronLeft, UtensilsCrossed, LockKeyhole, Phone, ShieldCheck} from 'lucide-react';
-
-const L = (lang, uz, ru) => lang === 'uz' ? uz : ru;
+import {translate as L} from './i18n';
 
 export default function Login({onBack, onSave, initialProfile, lang = 'uz'}) {
  const t = (uz, ru) => L(lang, uz, ru);
