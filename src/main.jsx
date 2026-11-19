@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Home, BookOpen, ShoppingBag, UserRound, Bell, Search, ArrowLeft, ArrowRight, ChevronRight, Plus, Minus, UtensilsCrossed, Beef, Star, Heart, Clock, MapPin, Gift, Languages, Headphones, Trash2, Check, Truck, CreditCard} from 'lucide-react';
 import {SECTIONS, PRODUCTS, minPrice} from './menu';
@@ -40,6 +40,8 @@ function SlideConfirm({ disabled, total, onConfirm, lang }) {
 }
 
 const read = (key, fallback, legacyKey) => { try { const raw = localStorage.getItem(key) ?? (legacyKey ? localStorage.getItem(legacyKey) : null); return raw !== null ? (JSON.parse(raw) ?? fallback) : fallback; } catch { return fallback; } };
+const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* Storage may be unavailable in a restricted webview. */ } };
+const removeStoredKeys = keys => { try { keys.forEach(key => localStorage.removeItem(key)); } catch { /* Continue without persistent storage. */ } };
 
 function LangSwitch({ lang, onChange, compact }) {
  return <div className={'lang-switch' + (compact ? ' compact' : '')} role="group" aria-label={L(lang, 'Ilova tili', 'Язык приложения')}>{[['uz', 'UZ'], ['ru', 'RU'], ['en', 'EN']].map(([code, label]) => <button key={code} type="button" className={lang === code ? 'active' : ''} aria-pressed={lang === code} onClick={() => onChange(code)}>{label}</button>)}</div>;
@@ -47,14 +49,14 @@ function LangSwitch({ lang, onChange, compact }) {
 
 function App() {
  const [lang, setLangState] = useState(() => { const saved = read('the-plov-lang', 'uz', 'samani-lang'); return ['uz', 'ru', 'en'].includes(saved) ? saved : 'uz'; });
- const setLang = value => { setLangState(value); localStorage.setItem('the-plov-lang', JSON.stringify(value)); };
+ const setLang = value => { setLangState(value); write('the-plov-lang', value); };
  const t = (uz, ru) => L(lang, uz, ru);
  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
  const [demoProfile, setDemoProfile] = useState(() => read('the-plov-demo-profile', null, 'samani-demo-profile'));
- const saveDemoProfile = value => { localStorage.setItem('the-plov-demo-profile', JSON.stringify(value)); setDemoProfile(value); };
+ const saveDemoProfile = value => { write('the-plov-demo-profile', value); setDemoProfile(value); };
  const [page, setPage] = useState('home'), [category, setCategory] = useState('all'), [query, setQuery] = useState(''), [product, setProduct] = useState(products[0]), [qty, setQty] = useState(1), [variant, setVariant] = useState(0), [cart, setCart] = useState(() => read('the-plov-cart', [], 'samani-cart')), [payment, setPayment] = useState('cash'), [note, setNote] = useState(''), [orders, setOrders] = useState(() => { const savedOrders = read('the-plov-orders', [], 'samani-orders'); return Array.isArray(savedOrders) ? savedOrders.map(({delivery, ...order}) => order) : []; }), [orderFilter, setOrderFilter] = useState('all'), [noticeFilter, setNoticeFilter] = useState('all'), [notifications, setNotifications] = useState(() => read('the-plov-notifications', [], 'samani-notifications')), [toast, setToast] = useState('');
- useEffect(() => { localStorage.setItem('the-plov-cart', JSON.stringify(cart)); }, [cart]); useEffect(() => { localStorage.setItem('the-plov-orders', JSON.stringify(orders)); }, [orders]); useEffect(() => { localStorage.setItem('the-plov-notifications', JSON.stringify(notifications)); }, [notifications]);
- useEffect(() => { ['the-plov-location', 'samani-location', 'the-plov-address', 'samani-address'].forEach(key => localStorage.removeItem(key)); }, []);
+ useEffect(() => { write('the-plov-cart', cart); }, [cart]); useEffect(() => { write('the-plov-orders', orders); }, [orders]); useEffect(() => { write('the-plov-notifications', notifications); }, [notifications]);
+ useEffect(() => { removeStoredKeys(['the-plov-location', 'samani-location', 'the-plov-address', 'samani-address']); }, []);
  useEffect(() => { const onPop = () => setPage(history.state?.page || 'home'); window.addEventListener('popstate', onPop); history.replaceState({ page: 'home' }, ''); return () => window.removeEventListener('popstate', onPop); }, []);
  const go = (p) => { if (p === page) return; history.pushState({ page: p }, ''); setPage(p); window.scrollTo(0, 0); };
  const back = () => { if (history.state?.page && history.state.page !== 'home') history.back(); else go('home'); };
