@@ -166,16 +166,6 @@ p {
   place-items: center;
 }
 
-.avatar-mini {
-  background: var(--black);
-  color: var(--white);
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-}
-
 .search-box,
 .search-input {
   display: flex;
@@ -2436,10 +2426,6 @@ p {
   .top-actions > .icon-btn {
     width: 32px;
     height: 32px;
-  }
-  .top-actions > .avatar-mini {
-    width: 28px;
-    height: 28px;
   }
   .lang-switch.compact button {
     padding: 4px 5px;
