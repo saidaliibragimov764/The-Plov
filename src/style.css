@@ -1581,6 +1581,24 @@ p {
   line-height: 1.4;
 }
 
+.telegram-location-instructions {
+  margin: 0 0 14px;
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.telegram-location-button {
+  text-decoration: none;
+}
+
+.telegram-location-note {
+  margin: 11px 2px 0;
+  color: var(--fg-subtle);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
 .map-search-area {
   position: relative;
   z-index: 2;

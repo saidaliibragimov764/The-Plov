@@ -8,6 +8,7 @@ import { searchAddress } from '../src/addressSearch.js';
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', optimizeDeps: { noDiscovery: true, include: [] } });
 after(() => vite.close());
 const { default: DeliveryMap } = await vite.ssrLoadModule('/src/DeliveryMap.jsx');
+const { default: TelegramLocation } = await vite.ssrLoadModule('/src/TelegramLocation.jsx');
 const {translate, localized} = await vite.ssrLoadModule('/src/i18n.js');
 const {SECTIONS, PRODUCTS} = await vite.ssrLoadModule('/src/menu.js');
 
@@ -37,11 +38,22 @@ test('sends delivery coordinates and address details to configured backend', asy
   assert.equal(navigationLinks(order.delivery.location).yandex, 'https://yandex.ru/maps/?pt=69.2,41.3&z=16');
   assert.match(navigationLinks(order.delivery.location).google, /destination=41.3,69.2/);
 });
+test('allows an order without a mini-app location when Telegram chat collects it separately', async () => {
+  const order = {id: 'order-telegram', items: [{id: 1, qty: 1}], total: 45000};
+  let requestBody;
+  const result = await sendOrder(order, '/api/orders', async (_url, options) => {
+    requestBody = JSON.parse(options.body);
+    return {ok: true, json: async () => ({id: 'order-telegram'})};
+  });
+  assert.deepEqual(requestBody, order);
+  assert.deepEqual(result, {demo: false, id: 'order-telegram'});
+});
+
 test('does not report success when backend fails or returns no acknowledgement', async () => {
   const order = {delivery: {location: {lat: 41.3, lng: 69.2}}};
   await assert.rejects(sendOrder(order, '/api/orders', async () => ({ok: false})));
   await assert.rejects(sendOrder(order, '/api/orders', async () => ({ok: true, json: async () => ({})})));
-  await assert.rejects(sendOrder({delivery: {}}, '/api/orders', async () => {throw new Error('should not call');}), /xaritada/);
+  await assert.rejects(sendOrder({delivery: {}}, '/api/orders', async () => {throw new Error('should not call');}), /Telegram chatida/);
 });
 
 test('searches Uzbekistan addresses in the selected language only on explicit request', async () => {
@@ -52,6 +64,14 @@ test('searches Uzbekistan addresses in the selected language only on explicit re
   assert.equal(new URL(url).searchParams.get('accept-language'), 'en');
   assert.deepEqual(places, [{id:'1',name:'Toshkent',lat:41.3,lng:69.2}]);
 });
+test('Telegram location button opens the configured bot and explains manual location sharing', () => {
+  const html = renderToString(React.createElement(TelegramLocation, {lang: 'en'}));
+  assert.match(html, /https:\/\/t\.me\/Theplov1_bot/);
+  assert.match(html, /Open Telegram chat/);
+  assert.match(html, /choose Location/);
+  assert.match(html, /mini app will not receive it/);
+});
+
 test('renders delivery map labels in English', () => {
   const html = renderToString(React.createElement(DeliveryMap, {location: null, onChange: () => {}, lang: 'en'}));
   assert.match(html, /Delivery address/);
