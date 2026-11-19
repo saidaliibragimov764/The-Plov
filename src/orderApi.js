@@ -9,7 +9,7 @@ export function navigationLinks(point) {
   };
 }
 export async function sendOrder(order, endpoint = ordersEndpoint, fetchImpl = fetch) {
-  if (!validLocation(order.delivery?.location)) throw new Error('Yetkazib berish joyini xaritada belgilang.');
+  if (order.delivery && !validLocation(order.delivery.location)) throw new Error('Lokatsiyani Telegram chatida yuboring.');
   if (!endpoint) return {demo: true};
   const response = await fetchImpl(endpoint, {
     method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(order)
